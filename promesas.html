@@ -1,0 +1,120 @@
+   <!DOCTYPE html>
+   <html>
+   <head>
+   	<title>Promises</title>
+   	<!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+    <!--Config File-->
+    <script type="text/javascript" src="./config.js"></script>
+   </head>
+   <body>
+
+
+  <nav class="red">
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">Promises</a>
+    </div>
+  </nav>
+
+  <!--Input for ew City-->
+  <div style="padding: 15px">
+    <input type="text" id="deliveryPromise" placeholder="Promise Id"><br>
+    <a class="waves-effect waves-light btn" onclick="deliverPromise()">Create</a>
+  </div>
+
+
+  <div id="content">
+    
+  </div>
+   
+   </body>
+
+   <script type="text/javascript">
+   	
+   		// Create a request variable and assign a new XMLHttpRequest object to it.
+		var request = new XMLHttpRequest();
+
+		// Open a new connection, using the GET request on the URL endpoint
+		request.open('GET', config.MY_SERVER + '/api/Promise', true);
+
+		request.onload = function () {
+		  // Begin accessing JSON data here
+		  var data = JSON.parse(this.response);
+
+		  data.forEach(thing => {
+
+
+		  var div = document.createElement('div');
+
+    	  div.className = 'row';
+
+    	  div.innerHTML =
+        	'<div class="row" >\
+    		    <div>\
+    		      <div class="card blue-grey darken-1">\
+    		        <div class="card-content white-text">\
+    		          <span class="card-title">Id: '+ thing.promiseId +'</span>\
+    		          <p id="scoutId">Timestamp: ' + thing.inventory + '</p>\
+    		          <p id="scoutEmployer">Type: '+ thing.scout +'</p>\
+    		          <p id="scoutName">Destination: '+ thing.destination +'</p>\
+                  <p id="scoutName">Quantity: '+ thing.quantityPromised +'</p>\
+                  <p id="scoutName">Date Posted: '+ thing.datePromised +'</p>\
+                  <p id="scoutName">Delivered: '+ thing.delivered +'</p>\
+                  <span class="card-title"><a href="./qrcode.html?promiseID='+ thing.promiseId +'">Scan QR Code</a></span>\
+                  <p id="scoutName">Date Delivered: '+ thing.dateDelivered +'</p>\
+    		        </div>\
+    		      </div>\
+    		    </div>\
+    		  </div>';
+
+		    
+
+    		document.getElementById('content').appendChild(div);
+
+
+		    console.log(thing);
+
+		  });
+		}
+
+
+		// Send request
+		request.send();
+
+    function deliverPromise(){
+      var promise = document.getElementById('deliveryPromise').value;
+      
+
+      if(promise === '' ){
+        alert("Empty Fields");
+
+      } else{
+        
+        var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+        xmlhttp.open("POST", config.MY_SERVER + "/api/deliverPromise");
+        xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xmlhttp.send(JSON.stringify({
+          $class: "org.smartsupply.inventory.deliverPromise", 
+          promise: "resource:org.smartsupply.inventory.Promise#" + promise, 
+          dateDelivered: new Date().toLocaleDateString() 
+        }));
+
+
+        document.getElementById('deliveryPromise').value = '';
+        
+
+        alert("Promise Sent");
+        
+      }
+
+      
+    }
+
+
+      
+    
+
+   </script>
+   </html>

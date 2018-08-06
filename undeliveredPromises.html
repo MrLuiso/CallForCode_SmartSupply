@@ -1,0 +1,74 @@
+   <!DOCTYPE html>
+   <html>
+   <head>
+   	<title>UndeliveredPromises</title>
+   	<!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+    <!--Config File-->
+    <script type="text/javascript" src="./config.js"></script>
+   </head>
+   <body>
+
+
+  <nav class="red">
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">Undelivered Promises</a>
+    </div>
+  </nav>
+
+  <div id="content">
+    
+  </div>
+   
+   </body>
+
+   <script type="text/javascript">
+   	
+   		// Create a request variable and assign a new XMLHttpRequest object to it.
+		var request = new XMLHttpRequest();
+
+		// Open a new connection, using the GET request on the URL endpoint
+		request.open('GET', config.MY_SERVER + '/api/queries/selectUndeliveredPromises', true);
+
+		request.onload = function () {
+		  // Begin accessing JSON data here
+		  var data = JSON.parse(this.response);
+		  data.forEach(thing => {
+
+		  var div = document.createElement('div');
+
+    	  div.className = 'row';
+
+    	  div.innerHTML =
+        	'<div class="row" >\
+    		    <div>\
+    		      <div class="card blue-grey darken-1">\
+    		        <div class="card-content white-text">\
+    		          <span class="card-title">Id: '+ thing.promiseId +'</span>\
+    		          <p id="scoutId">Timestamp: ' + thing.inventory + '</p>\
+    		          <p id="scoutEmployer">Type: '+ thing.scout +'</p>\
+    		          <p id="scoutName">Destination: '+ thing.destination +'</p>\
+                  <p id="scoutName">Quantity: '+ thing.quantityPromised +'</p>\
+                  <p id="scoutName">Date Posted: '+ thing.datePromised +'</p>\
+                  <p id="scoutName">Delivered: '+ thing.delivered +'</p>\
+                  <span class="card-title"><a href="./qrcode.html?promiseID='+ thing.promiseId +'">Scan QR Code</a></span>\
+                  <p id="scoutName">Date Delivered: '+ thing.dateDelivered +'</p>\
+    		        </div>\
+    		      </div>\
+    		    </div>\
+    		  </div>\
+          <div id="qrcode"></div>';    
+
+    		document.getElementById('content').appendChild(div);
+
+		  });
+		}
+
+		// Send request
+		request.send();
+    
+
+   </script>
+   </html>

@@ -1,0 +1,80 @@
+   <!DOCTYPE html>
+   <html>
+   <head>
+   	<title>Transactions</title>
+   	   <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+    <script type="text/javascript" src="./config.js"></script>
+   </head>
+   <body>
+
+
+  <nav class="red">
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">Transactions</a>
+      <ul id="nav-mobile" class="left hide-on-med-and-down">
+        <li><a href="file:///Users/luis.diaz/Desktop/NewUI/city.html">Cities</a></li>
+        <li><a href="file:///Users/luis.diaz/Desktop/NewUI/index.html">Scouts</a></li>
+        <li><a href="file:///Users/luis.diaz/Desktop/NewUI/promesas.html">Promises</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div id="content">
+    
+  </div>
+   
+   </body>
+
+   <script type="text/javascript">
+   	
+   		// Create a request variable and assign a new XMLHttpRequest object to it.
+		var request = new XMLHttpRequest();
+
+		// Open a new connection, using the GET request on the URL endpoint
+		request.open('GET',  config.MY_SERVER + '/api/system/historian', true);
+
+		request.onload = function () {
+		  // Begin accessing JSON data here
+		  var data = JSON.parse(this.response);
+
+		  data.forEach(thing => {
+
+
+		  var div = document.createElement('div');
+
+    	  div.className = 'row';
+
+    	  div.innerHTML =
+        	'<div class="row" >\
+    		    <div>\
+    		      <div class="card blue-grey darken-1">\
+    		        <div class="card-content white-text">\
+    		          <span class="card-title">Id: '+ thing.transactionId +'</span>\
+    		          <p id="scoutId">Timestamp: ' + thing.transactionTimestamp + '</p>\
+    		          <p id="scoutEmployer">Type: '+ thing.transactionType +'</p>\
+    		          <p id="scoutName">Participant: '+ thing.participantInvoking +'</p>\
+    		        </div>\
+    		      </div>\
+    		    </div>\
+    		  </div>';
+
+		    
+
+    		document.getElementById('content').appendChild(div);
+
+
+		    console.log(thing);
+
+		  });
+		}
+
+
+		// Send request
+		request.send();
+
+   </script>
+   </html>

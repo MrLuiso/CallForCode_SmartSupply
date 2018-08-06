@@ -1,0 +1,123 @@
+   <!DOCTYPE html>
+   <html>
+   <head>
+   	<title>makePromises</title>
+   	<!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+    <script type="text/javascript" src="./config.js"></script>
+   </head>
+   <body>
+
+
+  <nav class="red">
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">Promises</a>
+    </div>
+  </nav>
+
+  <div style="padding: 15px">
+  	<input type="text" id="newScout" placeholder="Enter Scout ID"><br>
+  	<input type="text" id="newDestination" placeholder="Enter Destination"><br>
+  	<input type="text" id="newInventory" placeholder="Enter Inventory"><br>
+    <input type="text" id="newQuantity" placeholder="Enter Quantity"><br>
+  	<a class="waves-effect waves-light btn" onclick="makePromise()">Create</a>
+  </div>
+
+  <div id="content">
+
+  </div>
+
+   </body>
+
+   <script type="text/javascript">
+
+   		// Create a request variable and assign a new XMLHttpRequest object to it.
+		var request = new XMLHttpRequest();
+
+		// Open a new connection, using the GET request on the URL endpoint
+		request.open('GET', config.MY_SERVER + '/api/Promise', true);
+
+		request.onload = function () {
+		  // Begin accessing JSON data here
+		  var data = JSON.parse(this.response);
+
+		  data.forEach(thing => {
+
+
+		  var div = document.createElement('div');
+
+    	  div.className = 'row';
+
+    	  div.innerHTML =
+        	'<div class="row" >\
+    		    <div>\
+    		      <div class="card blue-grey darken-1">\
+    		        <div class="card-content white-text">\
+    		          <span class="card-title">Id: '+ thing.promiseId +'</span>\
+    		          <p id="scoutId">Timestamp: ' + thing.inventory + '</p>\
+    		          <p id="scoutEmployer">Type: '+ thing.scout +'</p>\
+    		          <p id="scoutName">Destination: '+ thing.destination +'</p>\
+                  <p id="scoutName">Quantity: '+ thing.quantityPromised +'</p>\
+                  <p id="scoutName">Date Posted: '+ thing.datePromised +'</p>\
+                  <p id="scoutName">Delivered: '+ thing.delivered +'</p>\
+                  <span class="card-title"><a href="./qrcode.html?promiseID='+ thing.promiseId +'">Scan QR Code</a></span>\
+                  <p id="scoutName">Date Delivered: '+ thing.dateDelivered +'</p>\
+    		        </div>\
+    		      </div>\
+    		    </div>\
+    		  </div>';
+
+
+
+    		document.getElementById('content').appendChild(div);
+
+
+		    console.log(thing);
+
+		  });
+		}
+
+
+		// Send request
+		request.send();
+
+    function makePromise(){
+      var newScout = document.getElementById('newScout').value;
+      var newDestination = document.getElementById('newDestination').value;
+      var newInventory = document.getElementById('newInventory').value;
+      var newQuantity = document.getElementById('newQuantity').value;
+
+
+      if(newScout === '' || newDestination === '' || newInventory === '' || newQuantity === ''){
+        alert("Empty Fields");
+
+      } else{
+        //Create the Scout
+        var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+        xmlhttp.open("POST", config.MY_SERVER + "/api/makePromise");
+        xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xmlhttp.send(JSON.stringify(
+          {$class: "org.smartsupply.inventory.makePromise",
+          scout: "resource:org.smartsupply.inventory.Scout#" + newScout,
+          destination: "resource:org.smartsupply.inventory.City#" + newDestination,
+          inventory: "resource:org.smartsupply.inventory.Inventory#" + newInventory,
+          quantityPromised: newQuantity,
+          datePromised: new Date().toLocaleDateString()
+        }));
+
+
+        document.getElementById('newScout').value = '';
+        document.getElementById('newDestination').value = '';
+        document.getElementById('newInventory').value = '';
+        document.getElementById('newQuantity').value = '';
+
+
+      }
+
+
+    }
+
+   </script>
+   </html>

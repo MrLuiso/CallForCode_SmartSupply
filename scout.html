@@ -1,0 +1,113 @@
+   <!DOCTYPE html>
+   <html>
+   <head>
+   	<title>Scout</title>
+   	<!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+    <!--Config file-->
+    <script type="text/javascript" src="./config.js"></script>
+
+   </head>
+   <body>
+
+
+  <nav class="red">
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">Scouts</a>
+    </div>
+  </nav>
+
+
+  <div style="padding: 15px">
+  	<input type="text" id="newName" placeholder="Enter Name"><br>
+  	<input type="text" id="newEmployer" placeholder="Enter Employer"><br>
+  	<input type="text" id="newId" placeholder="Enter Id"><br>
+  	<a class="waves-effect waves-light btn" onclick="createScout()">Create</a>
+  </div>
+
+
+
+  
+  
+
+  <div id="content">
+    
+  </div>
+   
+   </body>
+
+   <script type="text/javascript">
+   	
+   		// Create a request variable and assign a new XMLHttpRequest object to it.
+		var request = new XMLHttpRequest();
+
+		// Open a new connection, using the GET request on the URL endpoint
+		request.open('GET', config.MY_SERVER + '/api/scout', true);
+
+		request.onload = function () {
+		  // Begin accessing JSON data here
+		  var data = JSON.parse(this.response);
+
+		  data.forEach(thing => {
+
+
+		  var div = document.createElement('div');
+
+    	  div.className = 'row';
+
+    	  div.innerHTML =
+    	  	'<div class="row">\
+		    <div class="col s12 m6">\
+		      <div class="card blue-grey darken-1">\
+		        <div class="card-content white-text">\
+		          <span class="card-title">'+ thing.scoutName +'</span>\
+		          <p id="scoutId">Id: ' + thing.scoutId + '</p>\
+		          <p id="scoutEmployer">Name: '+ thing.scoutName +'</p>\
+		          <p id="scoutName">Employer: '+ thing.scoutEmployer +'</p>\
+		        </div>\
+		      </div>\
+		    </div>\
+		  </div>';
+
+		    
+
+    		document.getElementById('content').appendChild(div);
+
+
+		    console.log(thing);
+
+		  });
+		}
+
+
+		// Send request
+		request.send();
+
+		function createScout(){
+			var newName = document.getElementById('newName').value;
+			var newEmployer = document.getElementById('newEmployer').value;
+			var newId = document.getElementById('newId').value;
+
+			if(newName === '' || newEmployer === '' || newId === ''){
+				alert("Empty Fields");
+
+			} else{
+				//Create the Scout
+				var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+				xmlhttp.open("POST", config.MY_SERVER + "/api/Scout");
+				xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+				xmlhttp.send(JSON.stringify({$class: "org.smartsupply.inventory.Scout", scoutId: newId, scoutName: newName, scoutEmployer: newEmployer}));
+
+
+				document.getElementById('newName').value = '';
+				document.getElementById('newEmployer').value = '';
+				document.getElementById('newId').value = '';
+			}
+
+			
+		}
+
+   </script>
+   </html>
